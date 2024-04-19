@@ -6,6 +6,7 @@
 
  */
 
+
 // implemented Eggbot-Protocol-Version v13
 // EBB-Command-Reference, I sourced from: http://www.schmalzhaus.com/EBB/EBBCommands.html
 // no homing sequence, switch-on position of pen will be taken as reference point.
@@ -22,33 +23,33 @@
 #include "AccelStepper.h" // nice lib from http://www.airspayce.com/mikem/arduino/AccelStepper/
 #include <Servo.h>
 #include "SerialCommand.h" //nice lib from Stefan Rado, https://github.com/kroimon/Arduino-SerialCommand
-#include <avr/eeprom.h>
+//#include <avr/eeprom.h>  // Accessing EEPROM memory is different from earlier avr/eeprom.h
 #include "button.h"
 
 #define initSting "EBBv13_and_above Protocol emulated by Eggduino-Firmware V1.6a"
 //Rotational Stepper:
-#define step1 11
-#define dir1 10
-#define enableRotMotor 9
-#define rotMicrostep 16  //MicrostepMode, only 1,2,4,8,16 allowed, because of Integer-Math in this Sketch
+#define step1 3 // Rotate in CNC Y // original value: 5
+#define dir1 6  // Rotate in CNC Y // original value: 6
+#define enableRotMotor 8 // original value: 11
+#define rotMicrostep 16  // middle jumper on CNC //MicrostepMode (default 16)
 //Pen Stepper:
-#define step2 8
-#define dir2 7
-#define enablePenMotor 6
-#define penMicrostep 16 //MicrostepMode, only 1,2,4,8,16 allowed, because of Integer-Math in this Sketch
+#define step2 2 // Pen in CNC X // original value: 7
+#define dir2 5  // Pen in CNC X // original value: 8
+#define enablePenMotor 8 // original value: 11
+#define penMicrostep 16 // middle jumper on CNC //MicrostepMode (default 16)
 
-#define servoPin 3 //Servo
+#define servoPin 11 // Servo on CNC board in Z+ end stop pin // original value: 4 // Servo1 (pin3) Servo2 (pin4)Servo1 (pin3)
 
 // EXTRAFEATURES - UNCOMMENT TO USE THEM -------------------------------------------------------------------
 
-// #define prgButton 2 // PRG button
-// #define penToggleButton 12 // pen up/down button
-// #define motorsButton 4 // motors enable button
+//#define prgButton 3 // PRG button
+//#define penToggleButton 3 // pen up/down button
+//#define motorsButton 4 // motors enable button
 
 //-----------------------------------------------------------------------------------------------------------
 
-#define penUpPosEEAddress ((uint16_t *)0)
-#define penDownPosEEAddress ((uint16_t *)2)
+//#define penUpPosEEAddress ((uint16_t *)0)
+//#define penDownPosEEAddress ((uint16_t *)2)
 
 //make Objects
 AccelStepper rotMotor(1, step1, dir1);
@@ -68,8 +69,8 @@ SerialCommand SCmd;
 // Variables... be careful, by messing around here, everything has a reason and crossrelations...
 int penMin=0;
 int penMax=0;
-int penUpPos=5;  //can be overwritten from EBB-Command SC
-int penDownPos=20; //can be overwritten from EBB-Command SC
+int penUpPos=52;  //can be overwritten from EBB-Command SC
+int penDownPos=60; //can be overwritten from EBB-Command SC
 int servoRateUp=0; //from EBB-Protocol not implemented on machine-side
 int servoRateDown=0; //from EBB-Protocol not implemented on machine-side
 long rotStepError=0;
@@ -84,7 +85,7 @@ float rotSpeed=0;
 float penSpeed=0; // these are local variables for Function SteppermotorMove-Command, but for performance-reasons it will be initialized here
 boolean motorsEnabled = 0;
 
-void setup() {   
+void setup() {
 	Serial.begin(9600);
 	makeComInterface();
 	initHardware();
@@ -94,7 +95,7 @@ void loop() {
 	moveOneStep();
 
 	SCmd.readSerial();
-
+  
 #ifdef penToggleButton
 	penToggle.check();
 #endif
