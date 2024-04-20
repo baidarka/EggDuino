@@ -27,19 +27,32 @@ This branch is tested and fully functional with the Arduino UNO R4.
 
 Powered with external 12V power.
 
-## CNC-Board
+|    |    |
+| --- | --- |
+| ![Arduino UNO R4](img/arduino-uno-r4.png) |  ![Power supply Arduino UNO R4](img/powersupply-arduino-uno.png ) |
 
-I used a CNC shield R3 board, with TMC2209, and a 24V 15A DC power supply.
+## CNC Board
 
-Kudos to DDK for lending me two steppers and a 24V power supply (see photos).
+A CNC board makes it easy to add an external powersource, and re-arranges Arduino pins.
+I used a CNC shield v3 board, with two TMC2209 driver boards, and a 24V 15A DC power supply.
+
+Kudos to DDK for lending me two steppers, driver boards and a 24V power supply (see photos).
 
 Find the wire pairs on the stepper motors. A wire pair has a low resistance (use your multi meter).
 Consider one wire pair 'A', the other 'B'.
 Wire the pair to the shield A-A-B-B. See photos.
 If you think the motor is turning the wrong direction, then swap the wires of one pair.
-Do not get confused. Internet contains many different boards (or incorrect wiring?).
+Internet contains many different look-alike boards and wildly varying wiring suggestions (or incorrect wiring?).
 
-- place the middle jumper = 16  (see photos)
+- place the middle microstep jumper = 16 on the CNC Shield, one for each driver board (see photos).
+
+|    |    |   |
+| --- | --- | --- |
+| ![CNC Shield wiring](img/cnc-shield-v3-stepper-wiring.png) |  ![CNC Shield jumpers](img/cnc-shield-v3-stepper-jumpers-wiring.png ) | ![CNC Shield servo wiring](img/cnc-shield-v3-servo-wiring.png) |
+
+|    |    |
+| --- | --- |
+| ![CNC Shield power](img/powersupply-cnc-shield-steppers.png) |  ![CNC Shield power 2](img/powersupply-cnc-shield-steppers-2.png ) |
 
 ## Installation
 
@@ -62,9 +75,8 @@ Install this software on your Arduino
 - Because of an bug in the Eggbot-extension (Function findEiBotBoards()), the Eggduino cannot be detected by default.
   For now:
 
-	- Go to your Inkscape-Installationfolder and navigate to subfolder .\App\Inkscape\share\extensions
-	- Open file 'ebb_serial.py'
-	- Ensure that the port list is scanned for the proper description of the VID:PID address.
-		For the Arduino UNO R4 this looks like:
-		`if port[2].startswith("USB VID:PID=2341:1002"):`
-
+  - Go to your Inkscape-Installationfolder and navigate to subfolder .\App\Inkscape\share\extensions
+  - Open file 'ebb_serial.py'
+  - Ensure that the port list is scanned for the proper description of the VID:PID address.
+  - For the Arduino UNO R4 this looks like:
+    `if port[2].startswith("USB VID:PID=2341:1002"):`
