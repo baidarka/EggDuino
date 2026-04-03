@@ -1,9 +1,4 @@
 void initHardware(){
-	// enable eeprom wait in avr/eeprom.h functions
-//	SPMCSR &= ~SELFPRGEN;
-
-	loadPenPosFromEE();
-
 	pinMode(enableRotMotor, OUTPUT);
 	pinMode(enablePenMotor, OUTPUT);
 
@@ -14,20 +9,6 @@ void initHardware(){
 	motorsOff();
 	penServo.attach(servoPin);
 	penServo.write(penState);
-}
-
-inline void loadPenPosFromEE() {
-	//penUpPos = eeprom_read_word(penUpPosEEAddress);
-	//penDownPos = eeprom_read_word(penDownPosEEAddress);
-	//penState = penUpPos;
-}
-
-inline void storePenUpPosInEE() {
-	//eeprom_update_word(penUpPosEEAddress, penUpPos);
-}
-
-inline void storePenDownPosInEE() {
-	//eeprom_update_word(penDownPosEEAddress, penDownPos);
 }
 
 inline void sendAck(){
@@ -46,7 +27,7 @@ void motorsOff() {
 
 void motorsOn() {
 	digitalWrite(enableRotMotor, LOW) ;
-	digitalWrite(enablePenMotor, LOW) ;
+	digitalWrite(enablePenMotor, LOW);
 	motorsEnabled = 1;
 }
 

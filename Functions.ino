@@ -25,18 +25,21 @@ void queryPen() {
 		state='1';
 	else
 		state='0';
-	Serial.print(String(state)+"\r\n");
+	Serial.print(state);
+	Serial.print("\r\n");
 	sendAck();
 }
 
 void queryButton() {
-	Serial.print(String(prgButtonState) +"\r\n");
+	Serial.print(prgButtonState);
+	Serial.print("\r\n");
 	sendAck();
 	prgButtonState = 0;
 }
 
 void queryLayer() {
-	Serial.print(String(layer) +"\r\n");
+	Serial.print(layer);
+	Serial.print("\r\n");
 	sendAck();
 } 
 
@@ -54,7 +57,8 @@ void setLayer() {
 }
 
 void queryNodeCount() {
-	Serial.print(String(nodeCount) +"\r\n");
+	Serial.print(nodeCount);
+	Serial.print("\r\n");
 	sendAck();
 
 }
@@ -73,12 +77,12 @@ void setNodeCount() {
 }
 
 void nodeCountIncrement() {
-	nodeCount=nodeCount++;
-	sendAck();	
+	nodeCount++;
+	sendAck();
 }
 
 void nodeCountDecrement() {
-	nodeCount=nodeCount--;
+	nodeCount--;
 	sendAck();
 }
 
@@ -224,12 +228,10 @@ void stepperModeConfigure(){
 		value = atoi(val);
 	if ((arg != NULL) && (val != NULL)){
 		switch (cmd) {
-			case 4: penDownPos= (int) ((float) (value-6000)/(float) 133.3); // transformation from EBB to PWM-Servo
-				storePenDownPosInEE();
+			case 4: penDownPos= (int) ((float)(value - EBB_SERVO_OFFSET) / EBB_SERVO_SCALE); // transformation from EBB to PWM-Servo
 				sendAck();
 				break;
-			case 5: penUpPos= (int)((float) (value-6000)/(float) 133.3); // transformation from EBB to PWM-Servo
-				storePenUpPosInEE();
+			case 5: penUpPos= (int) ((float)(value - EBB_SERVO_OFFSET) / EBB_SERVO_SCALE); // transformation from EBB to PWM-Servo
 				sendAck();
 				break;
 			case 6: //rotMin=value;    ignored
