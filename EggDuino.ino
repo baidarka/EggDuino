@@ -40,6 +40,10 @@
 
 #define servoPin 11 // Servo on CNC board in Z+ end stop pin // original value: 4 // Servo1 (pin3) Servo2 (pin4)Servo1 (pin3)
 
+// EBB servo position conversion: EBB units -> PWM degrees
+#define EBB_SERVO_OFFSET 6000
+#define EBB_SERVO_SCALE  133.3f
+
 // EXTRAFEATURES - UNCOMMENT TO USE THEM -------------------------------------------------------------------
 
 //#define prgButton 3 // PRG button
@@ -67,8 +71,6 @@ SerialCommand SCmd;
 	Button motorsToggle(motorsButton, toggleMotors);
 #endif
 // Variables... be careful, by messing around here, everything has a reason and crossrelations...
-int penMin=0;
-int penMax=0;
 int penUpPos=52;  //can be overwritten from EBB-Command SC
 int penDownPos=60; //can be overwritten from EBB-Command SC
 int servoRateUp=0; //from EBB-Protocol not implemented on machine-side
@@ -78,12 +80,12 @@ long penStepError=0;
 int penState=penUpPos;
 uint32_t nodeCount=0;
 unsigned int layer=0;
-boolean prgButtonState=0;
+bool prgButtonState=0;
 uint8_t rotStepCorrection = 16/rotMicrostep ; //devide EBB-Coordinates by this factor to get EGGduino-Steps
 uint8_t penStepCorrection = 16/penMicrostep ; //devide EBB-Coordinates by this factor to get EGGduino-Steps
 float rotSpeed=0;
 float penSpeed=0; // these are local variables for Function SteppermotorMove-Command, but for performance-reasons it will be initialized here
-boolean motorsEnabled = 0;
+bool motorsEnabled = 0;
 
 void setup() {
 	Serial.begin(9600);
